@@ -1,1 +1,6 @@
 *.pyc
+.env
+bower_components
+node_modules
+frontend/dist
+frontend/build

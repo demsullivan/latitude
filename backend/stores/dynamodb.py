@@ -60,7 +60,7 @@ def put_item(table, item, condition=None):
     )
 
 def create_lead(lead):
-    put_item('Lead', lead._asdict(), "attribute_not_exists(lead_url) and attribute_not_exists(date_created)")
+    put_item('Lead', lead._asdict(), "attribute_not_exists(url) and attribute_not_exists(date_created)")
 
 def create_source(source):
     put_item('Source', source._asdict(), "attribute_not_exists(source_name)")
