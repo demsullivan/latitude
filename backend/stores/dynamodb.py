@@ -1,8 +1,10 @@
 import boto3
+import logging
 
 from .models import Source, Lead
 
-dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
+dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8001', aws_access_key_id='accesskeyid', aws_secret_access_key='secretaccesskey')
+logger = logging.getLogger('latitude.dynamodb')
 
 def destroy():
     dynamodb.Table('Source').delete()
@@ -54,13 +56,17 @@ def initialize():
     )
 
 def put_item(table, item, condition=None):
-    dynamodb.Table(table).put_item(
-        Item=dict(item),
-        ConditionExpression=condition
-    )
+    try:
+        dynamodb.Table(table).put_item(
+            Item=dict(item),
+            ConditionExpression=condition
+        )
+    except Exception, e:
+        logger.error("Error creating lead: {}".format(str(e)))
+        pass
 
 def create_lead(lead):
-    put_item('Lead', lead._asdict(), "attribute_not_exists(url) and attribute_not_exists(date_created)")
+    put_item('Lead', lead._asdict(), "attribute_not_exists(lead_url) and attribute_not_exists(date_created)")
 
 def create_source(source):
     put_item('Source', source._asdict(), "attribute_not_exists(source_name)")

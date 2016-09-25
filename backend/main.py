@@ -34,7 +34,10 @@ def aggregate_leads():
         parser = parsers[source.parser]
         params = json.loads(source.params)
 
-        for lead in parser.get_leads(source, **params):
+        leads = parser.get_leads(source, **params)
+        logger.debug('Received {} leads from {}'.format(len(leads), source.source_name))
+
+        for lead in leads:
             store.create_lead(lead)
 
 def main():
