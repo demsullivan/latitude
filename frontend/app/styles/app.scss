@@ -1,0 +1,33 @@
+html, body {
+  margin-top: 15px;
+}
+
+.lead-box {
+  .panel-footer {
+    height: 40px;
+  }
+
+  ul.single-line-nav {
+    list-style-type: none;
+    padding-left: 0px;
+
+    li {
+      float: left;
+      padding: 0px 16px;
+    }
+  }
+}
+
+.icon {
+  float: left;
+  width: 24px;
+  height: 24px;
+
+  &.twitter {
+    background-image: url(/assets/twitter.png);
+  }
+
+  &.linkedin {
+    background-image: url(/assets/linkedin.png);
+  }
+}

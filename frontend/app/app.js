@@ -1,6 +1,7 @@
 import Store from './stores/dynamodb';
 import config from './config';
 import leadTemplate from './templates/lead.hbs';
+import leadComponent from './components/lead';
 
 function main() {
   AWS.config.update({
@@ -13,7 +14,7 @@ function main() {
   var store = new Store();
   store.getAllLeads().then(data => {
     data.forEach(item => {
-      $('#application').append(leadTemplate({ lead: item }));
+      $('#application').append(leadTemplate(Object.assign({ lead: item }, leadComponent)));
     })
   });
 

@@ -1,3 +1,28 @@
-<h3>{{ lead.title }}</h3>
-<p>{{ lead.description }}</p>
-<small>{{ lead.source_name }} &middot; <a href="{{ lead.lead_url }}">Link</a></small>
+<div class="col-lg-12 col-xs-12 lead-box">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h5>{{ lead.title }} <small>from {{ lead.source_name }}</small></h5>
+      <p>{{{ lead.description }}}</p>
+    </div>
+    <div class="panel-footer">
+      <ul class="single-line-nav">
+        <li><a href="{{ lead.lead_url }}">Link</a></li>
+        {{#if hasName}}
+          <li>{{ lead.contact_name }}</li>
+        {{/if}}
+        {{#if hasEmail}}
+          <li><a href="mailto:{{ lead.contact_email }}">{{ lead.contact_email }}</a></li>
+        {{/if}}
+        {{#if hasWebsite}}
+          <li><a href="{{ lead.website }}">{{ lead.website }}</a></li>
+        {{/if}}
+        {{#if hasTwitter}}
+          <li><div class="twitter icon"></div><a href="https://www.twitter.com/{{ lead.twitter }}">@{{ lead.twitter }}</a></li>
+        {{/if}}
+        {{#if hasLinkedIn}}
+          <li><div class="linkedin icon"></div><a href="{{ lead.linkedin }}">{{ lead.linkedin }}</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</div>

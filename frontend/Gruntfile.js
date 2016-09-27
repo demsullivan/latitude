@@ -11,6 +11,9 @@ module.exports = function(grunt) {
           js: 'dist/assets/js/vendor.js',
           css: 'build/assets/css/vendor.css',
           scss: 'build/assets/css/vendor.scss'
+        },
+        mainFiles: {
+          'bootstrap': ['dist/css/bootstrap.min.css', 'dist/css/bootstrap-theme.min.css']
         }
       }
     },
@@ -70,7 +73,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/assets/css/vendor.css': ['build/assets/css/vendor.scss', 'build/assets/css/vendor.css'],
-          'dist/assets/css/latitude.css': 'src/styles/app.scss'
+          'dist/assets/css/latitude.css': 'app/styles/app.scss'
         }
       }
     },
@@ -79,7 +82,7 @@ module.exports = function(grunt) {
       main: {
         files: [
           { src: 'app/index.html', dest: 'dist/index.html' },
-          { expand: true, src: ['app/public/**'], dest: 'dist/' }
+          { expand: true, nonull: true, cwd: 'app/public', src: '**', dest: 'dist/' }
         ]
       }
     },

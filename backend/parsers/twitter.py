@@ -21,7 +21,7 @@ class TwitterParser(object):
             tweet = status.AsDict()
             url = 'https://twitter.com/{}/status/{}'.format(tweet['user']['screen_name'], tweet['id'])
             title = u'Tweet from {}'.format(tweet['user']['name'])
-            twitter = 'https://twitter.com/{}'.format(tweet['user']['screen_name'])
+            twitter = tweet['user']['screen_name']
 
             logger.info('Converting tweet to lead for tweet ID {}'.format(tweet['id']))
 
