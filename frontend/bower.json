@@ -1,0 +1,23 @@
+{
+  "name": "latitude-frontend",
+  "version": "0.0.1",
+  "homepage": "https://github.com/demsullivan/latitude",
+  "authors": [
+    "Dave Sullivan <dave@dave-sullivan.com>"
+  ],
+  "description": "frontend for latitude",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "aws-sdk-js": "~2.6.3",
+    "bootstrap": "~3.3.7",
+    "jquery": "~3.1.0"
+  }
+}
