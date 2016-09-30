@@ -23,7 +23,7 @@ def create_password(password):
 
 class Login(object):
     def POST(self):
-        web.header('Access-Control-Allow-Origin', 'http://localhost:4201')
+        web.header('Access-Control-Allow-Origin', 'http://localhost:4201, http://latitude-app.s3-website-us-east-1.amazonaws.com')
         web.header('Access-Control-Allow-Credentials', 'true')
         params = web.input()
 
