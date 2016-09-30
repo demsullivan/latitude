@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 
 from stores.models import User
 from controllers.application import ApplicationController
-from utils import create_password
+from ..utils import create_password
 
 class LoginController(ApplicationController):
     def authenticate(self, user, username, password):
