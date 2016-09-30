@@ -18,6 +18,7 @@ def child_attr(el, selector, attr, ns=None):
 class RSSParser(object):
     def __init__(self):
         self.ns = {'atom': 'http://www.w3.org/2005/Atom'}
+        self.date_formats = ["%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%SZ"]
 
     def entry_to_lead_for_source(self, source):
         def entry_to_lead(entry):
@@ -29,7 +30,14 @@ class RSSParser(object):
             if date_string.endswith('+00:00'):
                 date_string = date_string[:-6]
 
-            date_created = int(time.mktime(datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S").timetuple()))
+            for fmt in self.date_formats:
+                try:
+                    date_created = int(time.mktime(datetime.strptime(date_string, fmt).timetuple()))
+                except ValueError:
+                    pass
+                else:
+                    break
+
 
             if url and title:
                 logger.info("Converting RSS entry to lead for URL {}".format(url))
