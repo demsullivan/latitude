@@ -3,7 +3,6 @@ import Lead from '../models/lead';
 export default class DynamoDB {
   constructor() {
     this.db = new AWS.DynamoDB();
-    this.db.endpoint = 'http://localhost:8001';
   }
 
   getAllLeads() {

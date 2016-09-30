@@ -1,11 +1,15 @@
+beautifulsoup4==4.5.1
 boto3==1.4.0
 botocore==1.4.55
+click==6.6
 docutils==0.12
 future==0.15.2
 futures==3.0.5
 jmespath==0.9.0
 oauthlib==2.0.0
+python-craigslist==1.0.2
 python-dateutil==2.5.3
+python-dotenv==0.6.0
 python-twitter==3.1
 requests==2.11.1
 requests-oauthlib==0.6.2
