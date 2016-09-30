@@ -6,6 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 
 from utils import find_class
 import stores.dynamodb as store
+from stores import seed
 
 logger = logging.getLogger('latitude')
 
@@ -20,7 +21,7 @@ def setup_environment():
 
 def initialize():
     setup_environment()
-    store.initialize()
+    store.initialize(seeds=seed.seeds())
 
 def aggregate_leads():
     parsers = {}

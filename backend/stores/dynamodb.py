@@ -3,14 +3,14 @@ import logging
 
 from .models import Source, Lead
 
-dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8001', aws_access_key_id='accesskeyid', aws_secret_access_key='secretaccesskey')
+dynamodb = boto3.resource('dynamodb')
 logger = logging.getLogger('latitude.dynamodb')
 
 def destroy():
     dynamodb.Table('Source').delete()
     dynamodb.Table('Lead').delete()
 
-def initialize():
+def initialize(seeds=None):
     leads_table = dynamodb.create_table(
         TableName='Lead',
         KeySchema=[
@@ -54,6 +54,13 @@ def initialize():
             'WriteCapacityUnits': 1
         }
     )
+
+    if seeds:
+        for seed in seeds:
+            if isinstance(seed, Source):
+                create_source(seed)
+            elif isinstance(seed, Lead):
+                create_lead(seed)
 
 def put_item(table, item, condition=None):
     try:
