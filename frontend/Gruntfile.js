@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         dest: {
           js: 'dist/assets/js/vendor.js',
           css: 'build/assets/css/vendor.css',
-          scss: 'build/assets/css/vendor.scss'
+          scss: 'build/assets/css/vendor.scss',
         },
         mainFiles: {
           'bootstrap': ['dist/css/bootstrap.min.css', 'dist/css/bootstrap-theme.min.css']
@@ -81,6 +81,7 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
+          { expand: true, cwd: 'bower_components/bootstrap', src: 'fonts/*.*', dest: 'dist/assets/' },
           { src: 'app/index.html', dest: 'dist/index.html' },
           { expand: true, nonull: true, cwd: 'app/public', src: '**', dest: 'dist/' }
         ]

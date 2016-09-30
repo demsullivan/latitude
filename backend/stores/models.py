@@ -23,3 +23,12 @@ Lead = namedtuple('Lead',
         'linkedin'
     ]
 )
+
+User = namedtuple('User',
+    [
+        'email',
+        'password',
+        'aws_access_key_id',
+        'aws_secret_access_key'
+    ]
+)

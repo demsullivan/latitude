@@ -1,16 +1,18 @@
 import boto3
 import json
 import logging
-import os
 import threading
-from dotenv import load_dotenv, find_dotenv
+import os
 
 from utils import find_class
-import stores.dynamodb as store
+from utils import setup_environment
+from importlib import import_module
 from stores import seed
+from stores.models import Source
 
 logger = logging.getLogger('latitude')
 store_lock = threading.Lock()
+store = import_module(os.environ.get('LATITUDE_STORE_PATH', 'stores.dynamodb'))
 
 class SourceAggregatorThread(threading.Thread):
     def __init__(self, source):
@@ -28,15 +30,6 @@ class SourceAggregatorThread(threading.Thread):
             store.create_lead(lead)
             store_lock.release()
 
-def setup_environment():
-    load_dotenv(find_dotenv())
-
-    if os.environ.get('LATITUDE_LOGGING', None):
-        logger.addHandler(logging.StreamHandler())
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.addHandler(logging.NullHandler())
-
 def initialize():
     setup_environment()
     store.initialize(seeds=seed.seeds())
@@ -47,7 +40,7 @@ def seed_db():
 
 def aggregate_leads():
     threads = []
-    for source in store.all_sources():
+    for source in store.all(Source):
         thread = SourceAggregatorThread(source)
         threads.append(thread)
         thread.start()

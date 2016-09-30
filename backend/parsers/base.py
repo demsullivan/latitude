@@ -7,6 +7,9 @@ class BaseParser(object):
     def __init__(self):
         self.now = time.mktime(datetime.now().timetuple())
 
+    def populate_lead(self, lead):
+        return lead
+        
     def lead_filter(self, lead):
         return lead is not None and (self.now - lead.date_created) < self.time_range_seconds
 

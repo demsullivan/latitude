@@ -21,7 +21,7 @@ export default {
       $.ajax({
         method: "POST",
         data: { username, password },
-        url: this.loginUrl,
+        url: `${this.apiUrl}/login`,
         dataType: 'json'
       }).done((data, status, xhr) => {
         resolve(data);
