@@ -1,7 +1,10 @@
 *.pyc
 .env
+*.env
 bower_components
 node_modules
 frontend/dist
 frontend/build
+backend/build
+*.zip
 .DS_Store
