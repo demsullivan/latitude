@@ -2,6 +2,7 @@ from importlib import import_module
 import hashlib
 import os
 import logging
+import sys
 from dotenv import load_dotenv, find_dotenv
 
 logger = logging.getLogger('latitude')
@@ -9,6 +10,8 @@ logger = logging.getLogger('latitude')
 def setup_environment():
     load_dotenv(find_dotenv())
 
+    sys.path.append(os.path.dirname(__file__))
+    print sys.path
     if os.environ.get('LATITUDE_LOGGING', None):
         logger.addHandler(logging.StreamHandler())
         logger.setLevel(logging.DEBUG)
