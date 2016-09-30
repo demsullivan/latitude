@@ -1,12 +1,11 @@
-from __future__ import absolute_import
 import web
 import json
 import os
 from botocore.exceptions import ClientError
 
 from stores.models import User
-from controllers.application import ApplicationController
-from ..utils import create_password
+from application import ApplicationController
+from utils import create_password
 
 class LoginController(ApplicationController):
     def authenticate(self, user, username, password):

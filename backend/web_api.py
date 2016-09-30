@@ -1,7 +1,6 @@
-from __future__ import absolute_import
 import web
 
-from .utils import setup_environment
+from utils import setup_environment
 from controllers.login import LoginController
 from controllers.update import UpdateLeadController
 

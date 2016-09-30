@@ -1,10 +1,9 @@
-from __future__ import absolute_import
 import web
 import json
 
-from ..utils import find_class
+from utils import find_class
 from stores.models import Lead, Source
-from controllers.application import ApplicationController
+from application import ApplicationController
 
 class UpdateLeadController(ApplicationController):
     def POST(self):
