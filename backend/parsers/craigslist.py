@@ -5,10 +5,11 @@ import time
 import logging
 
 from stores.models import Lead
+from parsers.base import BaseParser
 
 logger = logging.getLogger('latitude.craigslist')
 
-class CraigslistParser(object):
+class CraigslistParser(BaseParser):
     def job_to_lead_for_source(self, source):
         def job_to_lead(job):
             title = job['name']

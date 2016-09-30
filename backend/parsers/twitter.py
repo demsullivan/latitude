@@ -4,16 +4,19 @@ import os
 import logging
 import urllib
 
+from parsers.base import BaseParser
 from stores.models import Lead
 
 logger = logging.getLogger('latitude.twitter')
 
-class TwitterParser(object):
+class TwitterParser(BaseParser):
     def __init__(self):
         self.api = twitter.Api(consumer_key=os.environ.get('TWITTER_CONSUMER_KEY', None),
                                consumer_secret=os.environ.get('TWITTER_CONSUMER_SECRET', None),
                                access_token_key=os.environ.get('TWITTER_ACCESS_TOKEN_KEY', None),
                                access_token_secret=os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', None))
+        super(TwitterParser, self).__init__()
+        
 
     def tweet_to_lead_for_source(self, source):
 

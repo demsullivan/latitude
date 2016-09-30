@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 
 from stores.models import Lead
+from parsers.base import BaseParser
 
 logger = logging.getLogger('latitude.rss')
 
@@ -15,10 +16,11 @@ def child_attr(el, selector, attr, ns=None):
     else:
         return None
 
-class RSSParser(object):
+class RSSParser(BaseParser):
     def __init__(self):
         self.ns = {'atom': 'http://www.w3.org/2005/Atom'}
         self.date_formats = ["%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%SZ"]
+        super(RSSParser, self).__init__()
 
     def entry_to_lead_for_source(self, source):
         def entry_to_lead(entry):
@@ -50,15 +52,6 @@ class RSSParser(object):
         return entry_to_lead
 
     def get_leads(self, source, title_filter=None, content_filter=None):
-        def lead_filter(lead):
-            if lead is None:
-                return False
-
-            if title_filter is not None:
-                return lead.title.find(title_filter) > -1
-            if content_filter is not None:
-                return lead.description.find(content_filter) > -1
-
         logger.info('Grabbing RSS from {}'.format(source.source_url))
 
         try:
@@ -70,4 +63,4 @@ class RSSParser(object):
         tree = ET.parse(response)
         root = tree.getroot()
 
-        return filter(None, map(self.entry_to_lead_for_source(source), root.findall('atom:entry', self.ns)))
+        return map(self.entry_to_lead_for_source(source), root.findall('atom:entry', self.ns))

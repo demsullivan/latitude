@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 import os
+import threading
 from dotenv import load_dotenv, find_dotenv
 
 from utils import find_class
@@ -9,6 +10,23 @@ import stores.dynamodb as store
 from stores import seed
 
 logger = logging.getLogger('latitude')
+store_lock = threading.Lock()
+
+class SourceAggregatorThread(threading.Thread):
+    def __init__(self, source):
+        self.parser = find_class(source.parser)()
+        self.params = json.loads(source.params)
+        self.source = source
+        super(SourceAggregatorThread, self).__init__()
+
+    def run(self):
+        leads = self.parser.get_lead_list(self.source, self.params)
+        logger.debug('Received {} leads from {}'.format(len(leads), self.source.source_name))
+
+        for lead in leads:
+            store_lock.acquire()
+            store.create_lead(lead)
+            store_lock.release()
 
 def setup_environment():
     load_dotenv(find_dotenv())
@@ -23,23 +41,19 @@ def initialize():
     setup_environment()
     store.initialize(seeds=seed.seeds())
 
+def seed_db():
+    setup_environment()
+    store.seed_db(seed.seeds())
+
 def aggregate_leads():
-    parsers = {}
-
+    threads = []
     for source in store.all_sources():
-        logger.info('Processing source {}'.format(source.source_name))
+        thread = SourceAggregatorThread(source)
+        threads.append(thread)
+        thread.start()
 
-        if not parsers.has_key(source.parser):
-            parsers[source.parser] = find_class(source.parser)()
-
-        parser = parsers[source.parser]
-        params = json.loads(source.params)
-
-        leads = parser.get_leads(source, **params)
-        logger.debug('Received {} leads from {}'.format(len(leads), source.source_name))
-
-        for lead in leads:
-            store.create_lead(lead)
+    for thread in threads:
+        thread.join()
 
 def main():
     setup_environment()

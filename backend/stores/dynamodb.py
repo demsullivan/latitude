@@ -1,9 +1,10 @@
 import boto3
 import logging
+import os
 
 from .models import Source, Lead
 
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', endpoint_url=os.environ.get('AWS_DYNAMODB_ENDPOINT_URL', None))
 logger = logging.getLogger('latitude.dynamodb')
 
 def destroy():
@@ -55,21 +56,29 @@ def initialize(seeds=None):
         }
     )
 
-    if seeds:
-        for seed in seeds:
-            if isinstance(seed, Source):
-                create_source(seed)
-            elif isinstance(seed, Lead):
-                create_lead(seed)
+    # if seeds:
+    #     for seed in seeds:
+    #         if isinstance(seed, Source):
+    #             create_source(seed)
+    #         elif isinstance(seed, Lead):
+    #             create_lead(seed)
+
+def seed_db(seeds):
+    for seed in seeds:
+        if isinstance(seed, Source):
+            create_source(seed)
+        elif isinstance(seed, Lead):
+            create_lead(seed)
 
 def put_item(table, item, condition=None):
+    logger.debug("Creating {} {}".format(table, item))
     try:
         dynamodb.Table(table).put_item(
             Item=dict(item),
             ConditionExpression=condition
         )
     except Exception, e:
-        logger.error("Error creating lead: {}".format(str(e)))
+        logger.error("Error creating {}: {}".format(table, str(e)))
         pass
 
 def create_lead(lead):
