@@ -3,6 +3,7 @@ import urlparse
 import boto3
 import hashlib
 import json
+import os
 from botocore.exceptions import ClientError
 
 dynamodb = boto3.resource('dynamodb')
@@ -23,7 +24,11 @@ def create_password(password):
 
 class Login(object):
     def POST(self):
-        web.header('Access-Control-Allow-Origin', 'http://localhost:4201, http://latitude-app.s3-website-us-east-1.amazonaws.com')
+        if os.environ.get('LATITUDE_PROD', False):
+            web.header('Access-Control-Allow-Origin', 'http://latitude-app.s3-website-us-east-1.amazonaws.com')
+        else:
+            web.header('Access-Control-Allow-Origin', 'http://localhost:4201')
+
         web.header('Access-Control-Allow-Credentials', 'true')
         params = web.input()
 
