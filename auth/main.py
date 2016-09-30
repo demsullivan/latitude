@@ -10,50 +10,44 @@ dynamodb = boto3.resource('dynamodb')
 users = dynamodb.Table('User')
 
 urls = (
-    '/login', 'Login'
+    '/login', 'LoginController'
 )
+
 app = web.application(urls, globals())
-
 wsgi = app.wsgifunc()
-
-def authenticate(user, username, password):
-    return user['email'] == username and user['password'] == create_password(password)
 
 def create_password(password):
     return hashlib.sha512(password).hexdigest()
 
-class Login(object):
-    def POST(self):
-        if os.environ.get('LATITUDE_PROD', False):
-            web.header('Access-Control-Allow-Origin', 'http://latitude-app.s3-website-us-east-1.amazonaws.com')
-        else:
-            web.header('Access-Control-Allow-Origin', 'http://localhost:4201')
+class LoginController(object):
+    def authenticate(self, user, username, password):
+        return user['email'] == username and user['password'] == create_password(password)
 
+    def serialized_user(self, user):
+        blacklist_fields = ['password']
+        return json.dumps(dict([(k, v) for k, v in user.items() if k not in blacklist_fields]))
+
+    def POST(self):
+        web.header('Access-Control-Allow-Origin', os.environ.get('LATITUDE_CORS_ORIGIN', 'http://localhost:4201'))
         web.header('Access-Control-Allow-Credentials', 'true')
         params = web.input()
 
         try:
-            response = users.get_item(
-                Key={ 'email': params.username }
-            )
+            response = users.get_item(Key={ 'email': params.username })
         except ClientError as e:
             return web.internalerror(message=str(e))
         else:
             user = response['Item']
 
-            if authenticate(user, params.username, params.password):
-                return json.dumps(dict(aws_access_key_id=user['aws_access_key_id'], aws_secret_access_key=user['aws_secret_access_key']))
+            if self.authenticate(user, params.username, params.password):
+                return self.serialized_user(user)
 
         return web.unauthorized()
 
-def create_user(email, password, aws_access_key_id, aws_secret_access_key):
+def create_user(**kwargs):
+    kwargs['password'] = create_password(kwargs['password'])
     users.put_item(
-        Item=dict(
-            email=email,
-            password=create_password(password),
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key
-        ),
+        Item=kwargs,
         ConditionExpression="attribute_not_exists(email)"
     )
 
