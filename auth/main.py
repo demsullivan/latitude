@@ -8,6 +8,13 @@ from botocore.exceptions import ClientError
 dynamodb = boto3.resource('dynamodb')
 users = dynamodb.Table('User')
 
+urls = (
+    '/login', 'Login'
+)
+app = web.application(urls, globals())
+
+wsgi = app.wsgifunc()
+
 def authenticate(user, username, password):
     return user['email'] == username and user['password'] == create_password(password)
 
@@ -46,10 +53,6 @@ def create_user(email, password, aws_access_key_id, aws_secret_access_key):
     )
 
 def main():
-    urls = (
-        '/login', 'Login'
-    )
-    app = web.application(urls, globals())
     app.run()
 
 if __name__ == '__main__':
