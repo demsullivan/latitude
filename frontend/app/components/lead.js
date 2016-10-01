@@ -30,6 +30,7 @@ export default {
         }).done(data => {
           this.lead = JSON.parse(data);
           $(`#lead-${this.id}`).replaceWith(leadTemplate(this));
+          this.didRender();
         }).fail((xhr, status, err) => {
           target.addClass('failed');
         }).always(() => {
