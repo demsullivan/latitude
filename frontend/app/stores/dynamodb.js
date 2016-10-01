@@ -20,12 +20,8 @@ export default class DynamoDB {
     return new Promise((resolve, reject) => {
       this.db.scan({ TableName: 'Lead' }, (err, data) => {
         var leads = data['Items']
-          .map(item => {
-            var model = this.deserializeModel(item);
-            if (model.deleted) return null;
-            else return new Lead(model);
-          })
-          .filter(function(item) { return item !== null });
+          .map(item => { return new Lead(this.deserializeModel(item)); })
+          .filter(lead => { return !lead.deleted; });
 
         resolve(leads);
       });

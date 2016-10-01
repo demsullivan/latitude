@@ -3,12 +3,12 @@ The lead aggregation tool with attitude.
 
 ## What is Latitude?
 
-Lattitude is an AWS-based tool which scours the web for consulting leads. Driven by
-a list of sources and parser functions stored in DynamoDB, a Lambda function is executed
-on a regular basis to fetch data from these sources and store them in a database.
+Latitude is a tool which scours the web for consulting leads, driven by a list of lead sources
+stored in AWS DynamoDB. There are three main components:
 
-The React-based frontend then loads these leads from DynamoDB and displays them in an
-easy-to-read format.
+* Lambda Python function - executed on a regular basis to fetch data from the sources and store them in DynamoDB.
+* Minimal Python/web.py backend - used for user authentication and some basic interactivity
+* Grunt/ES6/Handlebars frontend - a custom Gruntfile built to support integration between Bower+ES6+Handlebars
 
 ## Setup and Installation
 
