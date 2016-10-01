@@ -3,7 +3,9 @@
     <div class="panel-body">
       <span id="toggle-{{ id }}" class="pull-left collapse-toggle glyphicon glyphicon-collapse-down"></span>
       <h3>{{ lead.title }} <small>from {{ lead.source_name }} on {{ humanizedTimestamp }}</small></h3>
-      <div class="description">{{{ lead.description }}}</div>
+      <div class="description-container">
+        <div class="description">{{{ lead.description }}}</div>
+      </div>
     </div>
     <div class="panel-footer">
       <ul class="single-line-nav">

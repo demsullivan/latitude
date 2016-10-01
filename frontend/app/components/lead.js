@@ -1,16 +1,34 @@
 import config from '../config';
 import leadTemplate from '../templates/lead.hbs';
 
+function promiseClick(promiseFunction) {
+  function eventHandler(ev) {
+    var target = $(ev.target);
+    if (!target.hasClass('spinner')) {
+      target.toggleClass('spinner');
+    }
+
+    promiseFunction(ev).then(() => {
+      target.toggleClass('spinner');
+    }).catch(() => {
+      target.toggleClass('spinner');
+      target.addClass('failed');
+    });
+  }
+
+  return eventHandler;
+}
+
 export default {
     didRender() {
       this.attachEventListeners();
     },
 
     attachEventListeners() {
-      $(`#toggle-${this.id}`).click(this.onToggleClick.bind(this));
-      $(`#refresh-${this.id}`).click(this.onRefreshClick.bind(this));
-      $(`#save-${this.id}`).click(this.onSaveClick.bind(this));
-      $(`#remove-${this.id}`).click(this.onRemoveClick.bind(this));
+      $(`#toggle-${this.id}`).click(promiseClick(this.onToggleClick.bind(this)));
+      $(`#refresh-${this.id}`).click(promiseClick(this.onRefreshClick.bind(this)));
+      $(`#save-${this.id}`).click(promiseClick(this.onSaveClick.bind(this)));
+      $(`#remove-${this.id}`).click(promiseClick(this.onRemoveClick.bind(this)));
     },
 
     onToggleClick() {
@@ -19,26 +37,28 @@ export default {
     },
 
     onRefreshClick(ev) {
-      var target = $(ev.target);
-      if (!target.hasClass('spinner')) {
-        target.toggleClass('spinner');
+      return new Promise((resolve, reject) => {
 
         $.ajax({
+
           method: 'POST',
           url: `${config.apiUrl}/update`,
           data: { lead_url: this.lead.lead_url, date_created: this.lead.date_created },
+
         }).done(data => {
+
           this.lead = JSON.parse(data);
           $(`#lead-${this.id}`).replaceWith(leadTemplate(this));
           this.didRender();
-        }).fail((xhr, status, err) => {
-          target.addClass('failed');
-        }).always(() => {
-          target.toggleClass('spinner');
-        });
-      }
+          resolve();
 
-      console.log('refresh clicked');
+        }).fail((xhr, status, err) => {
+
+          reject();
+
+        });
+
+      });
     },
 
     onSaveClick(ev) {
@@ -46,7 +66,31 @@ export default {
     },
 
     onRemoveClick(ev) {
-      console.log('remove clicked');
+      return new Promise((resolve, reject) => {
+
+        $.ajax({
+
+          method: 'POST',
+          url: `${config.apiUrl}/delete`,
+          data: { lead_url: this.lead.lead_url, date_created: this.lead.date_created }
+
+        }).done(() => {
+
+          var leadEl = $(`#lead-${this.id}`);
+          leadEl.addClass('transparent');
+          leadEl.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', () => {
+            leadEl.remove();
+          });
+
+          resolve();
+
+        }).fail(() => {
+
+          reject();
+
+        });
+
+      });
     },
 
     hasAttribute(attr) {

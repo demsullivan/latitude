@@ -127,3 +127,10 @@ def all(model):
 ########## UPDATE METHODS ##########
 def update(obj):
     put_item(obj.__class__.__name__, obj._asdict())
+
+def delete_by_key(model, **key):
+    dynamodb.Table(model.__name__).update_item(
+        Key=key,
+        UpdateExpression="set deleted = :d",
+        ExpressionAttributeValues={ ':d': True }
+    )

@@ -20,7 +20,8 @@ Lead = namedtuple('Lead',
         'contact_email',
         'website',
         'twitter',
-        'linkedin'
+        'linkedin',
+        'deleted'
     ]
 )
 

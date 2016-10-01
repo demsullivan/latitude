@@ -6,10 +6,12 @@ sys.path.append(os.path.dirname(__file__))
 from utils import setup_environment
 from controllers.login import LoginController
 from controllers.update import UpdateLeadController
+from controllers.delete import DeleteLeadController
 
 urls = (
     '/login',  'LoginController',
-    '/update', 'UpdateLeadController'
+    '/update', 'UpdateLeadController',
+    '/delete', 'DeleteLeadController'
 )
 
 app = web.application(urls, globals())
