@@ -1,3 +1,3 @@
 export default {
-  apiUrl: 'http://localhost:8080'
+  apiUrl: 'http://latitude-auth.herokuapp.com'
 }

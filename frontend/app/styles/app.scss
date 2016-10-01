@@ -35,3 +35,11 @@ html, body {
     content: '\e031';
   }
 }
+
+.failed {
+  color: #f00;
+
+  &:before {
+    content: '\e107';
+  }
+}

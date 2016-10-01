@@ -31,7 +31,7 @@ export default {
           this.lead = JSON.parse(data);
           $(`#lead-${this.id}`).replaceWith(leadTemplate(this));
         }).fail((xhr, status, err) => {
-          debugger;
+          target.addClass('failed');
         }).always(() => {
           target.toggleClass('spinner');
         });
